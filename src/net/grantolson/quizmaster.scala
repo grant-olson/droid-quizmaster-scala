@@ -40,6 +40,16 @@ object quizInfo {
   }
 }
 
+class quizScore extends Activity {
+  override def onCreate(savedInstanceState:Bundle) : Unit = {
+    super.onCreate(savedInstanceState)
+    val text = new TextView(this)
+    text.setText("Your score was " + quizInfo.score)
+    setContentView(text)
+  }
+}
+
+
 class quizQuestion extends Activity {
   def addRow(v:View):TableRow = {
     val tr = new TableRow(this)
@@ -66,8 +76,12 @@ class quizQuestion extends Activity {
 	  case Yes() => quizInfo.score += 1
 	  case No() => ()
 	}
-        val myIntent:Intent = new Intent(vg.getContext(), classOf[quizQuestion])
-        vg.getContext().startActivity(myIntent)
+        quizInfo.getNextQuestion match {
+	  case None =>
+	    val myIntent:Intent = new Intent(vg.getContext(), classOf[quizScore])
+            vg.getContext().startActivity(myIntent)
+	  case Some(question) => askNextQuestion(question)
+	}
 	
       }
     } )
@@ -81,9 +95,12 @@ class quizQuestion extends Activity {
 	  case No() => quizInfo.score += 1
 	  case Yes() => ()
 	}
-        val myIntent:Intent = new Intent(vg.getContext(), classOf[quizQuestion])
-        vg.getContext().startActivity(myIntent)
-	
+        quizInfo.getNextQuestion match {
+	  case None =>
+	    val myIntent:Intent = new Intent(vg.getContext(), classOf[quizScore])
+            vg.getContext().startActivity(myIntent)
+	  case Some(question) => askNextQuestion(question)
+	}
       }
     } )
     vg.addView(addRow(noButton))
