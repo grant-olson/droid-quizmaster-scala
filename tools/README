@@ -1,0 +1,6 @@
+You'll need the following scala and proguard jars in this directory:
+
+scala-compiler.jar
+scala-library.jar
+proguard.jar
+retrace.jar
