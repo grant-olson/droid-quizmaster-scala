@@ -6,55 +6,58 @@ import android.widget._
 import android.os.Bundle
 
 
-abstract class DecisionType
+abstract class Answers
+case class Yes() extends Answers
+case class No() extends Answers
 
-case class Title(name: String) extends DecisionType
-case class Button(name: String, activity: String) extends DecisionType
-case class Decision(text: String, buttons: List[Button] ) extends DecisionType
+abstract class QuestionType
+case class YesNoQuestion(question: String, rightAnswer: Answers) extends QuestionType
 
+abstract class QuestionList
+case class YesNoList(name: String, yesText: String, noText: String, questions: List[YesNoQuestion]) extends QuestionList
 
-trait Decisions extends Activity {
-  val title:String
-  val decisions:List[DecisionType]
+class startdecisions extends Activity {
 
-  def buildViewGroup():ViewGroup = {
-    val vg = new LinearLayout(this)
+  val star_trek_quiz = YesNoList("Star Trek Character or Star Trek Actor?", "Star Trek Character",
+    			         "Star Trek Actor", List[YesNoQuestion](
+				   YesNoQuestion("Armin Shimmerman", Yes()),
+				   YesNoQuestion("William Riker", No())
+			         ))
 
-    for (d <- decisions) d match {
-	case Button(name,activity) => 
-	  val button = new android.widget.Button(this)
-	  button.setText(name)
-	  vg.addView(button)
-	
-	case Title(name) =>
-	  val text = new TextView(this)
-	  text.setText(name)
-	  vg.addView(text)
-	
-	case Decision(text,buttons) => 
-	  val decision = new TextView(this)
-	  decision.setText(text)
-	  vg.addView(decision)
-    }
-    vg
+  def addRow(v:View):TableRow = {
+    val tr = new TableRow(this)
+    tr.addView(v)
+    tr
   }
-
+  
   override def onCreate(savedInstanceState:Bundle) : Unit = {
     super.onCreate(savedInstanceState)
-    setContentView(buildViewGroup())
+
+    for (question <- star_trek_quiz.questions) {
+      val vg = new TableLayout(this)
+      
+      val title = new TextView(this)
+      title.setText(star_trek_quiz.name)
+      vg.addView(addRow(title))
+
+      val q = new TextView(this)
+      q.setText(question.question)
+      vg.addView(addRow(q))
+
+      val yesButton = new Button(this)
+      yesButton.setText(star_trek_quiz.yesText)
+      yesButton.setOnClickListener(new View.OnClickListener {def onClick(v: View) {}} )
+      vg.addView(addRow(yesButton))
+
+      val noButton = new Button(this)
+      noButton.setText(star_trek_quiz.noText)
+      noButton.setOnClickListener(new View.OnClickListener {def onClick(v: View) {}} )
+      vg.addView(addRow(noButton))
+
+      setContentView(vg)
+
+    }
   }
-
-}
-
-class startdecisions extends Decisions {
-
-  val title = "START HERE"
-  val decisions = List[DecisionType](
-    Title("name"),
-    Button("button","foo"),
-    Decision("Foo",List[Button](
-      Button("yes","yes"))
-	   ))
 
 }
 
