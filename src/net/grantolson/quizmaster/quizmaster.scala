@@ -9,11 +9,11 @@ import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
 
 object quizInfo {
-  var currentQuiz = net.grantolson.quizmaster.quizzes.starTrek.quiz
-  var remainingQuestions = starTrek.quiz.questions
+  var currentQuiz = net.grantolson.quizmaster.quizzes.movies.quiz
+  var remainingQuestions = currentQuiz.questions
   var score = 0
 
-  def getNextQuestion():Option[YesNoQuestion] = {
+  def getNextQuestion():Option[QuestionType] = {
     remainingQuestions match {
       case head :: tail =>
 	remainingQuestions = tail; return Some(head)
@@ -39,8 +39,8 @@ class quizQuestion extends Activity {
     tr
   }
 
-  def askNextQuestion(question:YesNoQuestion) : Unit = {
-    val vg = new TableLayout(this)
+  def askYesNoQuestion(question:YesNoQuestion) : Unit = {
+/*    val vg = new TableLayout(this)
      
     val title = new TextView(this)
     title.setText(quizInfo.currentQuiz.name)
@@ -88,7 +88,54 @@ class quizQuestion extends Activity {
     vg.addView(addRow(noButton))
 
     setContentView(vg)
+*/
+  }
 
+  def makeAnswerButton(text: String, currentType: Answers, rightAnswer: Answers) = {
+    val button = new Button(this)
+    button.setText(text)
+    val me = this // 'this' in the anon class won't work
+    button.setOnClickListener(new View.OnClickListener {
+      def onClick(v: View) {
+	if (currentType == rightAnswer) { quizInfo.score += 1 }
+        quizInfo.getNextQuestion match {
+	  case None =>
+	    val myIntent:Intent = new Intent(me, classOf[quizScore])
+            me.startActivity(myIntent)
+	  case Some(question) => askNextQuestion(question)
+	}
+	
+      }
+    } )
+    addRow(button)
+  }
+
+  def askMultipleChoiceQuestion(question:MultipleChoiceQuestion) : Unit = {
+    val vg = new TableLayout(this)
+     
+    val title = new TextView(this)
+    title.setText(quizInfo.currentQuiz.name)
+    vg.addView(addRow(title))
+
+    val q = new TextView(this)
+    q.setText(question.question)
+    vg.addView(addRow(q))
+
+    vg.addView(makeAnswerButton(question.A, A(), question.rightAnswer))
+    vg.addView(makeAnswerButton(question.B, B(), question.rightAnswer))
+    vg.addView(makeAnswerButton(question.C, C(), question.rightAnswer))
+    vg.addView(makeAnswerButton(question.D, D(), question.rightAnswer))
+
+    setContentView(vg)
+
+  }
+
+
+  def askNextQuestion(question:QuestionType) : Unit = {
+    question match {
+      case yn:YesNoQuestion => askYesNoQuestion(yn)
+      case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(m)
+    }
   }
 
   override def onCreate(savedInstanceState:Bundle) : Unit = {
