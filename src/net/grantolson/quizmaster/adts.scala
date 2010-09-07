@@ -19,9 +19,9 @@ abstract class QuestionType
 case class YesNoQuestion(question: String, rightAnswer: YesNoAnswers) extends QuestionType
 case class MultipleChoiceQuestion(question: String, A: String, B: String, C: String, D: String, rightAnswer: MultipleChoiceAnswers) extends QuestionType
   
-abstract class QuestionList
-case class YesNoList(name: String, yesText: String, noText: String, questions: List[YesNoQuestion]) extends QuestionList
-case class MultipleChoiceList(name: String, questions: List[MultipleChoiceQuestion]) extends QuestionList
+abstract class Quiz
+case class YesNoQuiz(name: String, yesText: String, noText: String, questions: List[YesNoQuestion]) extends Quiz
+case class MultipleChoiceQuiz(name: String, questions: List[MultipleChoiceQuestion]) extends Quiz
 
 
 }

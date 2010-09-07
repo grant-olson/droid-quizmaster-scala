@@ -9,8 +9,11 @@ import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
 
 object quizInfo {
-  var currentQuiz = net.grantolson.quizmaster.quizzes.movies.quiz
-  var remainingQuestions = currentQuiz.questions
+  var currentQuiz:Quiz = net.grantolson.quizmaster.quizzes.starTrek.quiz
+  var remainingQuestions = currentQuiz match {
+    case yn:YesNoQuiz => yn.questions
+    case mc:MultipleChoiceQuiz => mc.questions
+  }
   var score = 0
 
   def getNextQuestion():Option[QuestionType] = {
@@ -19,6 +22,19 @@ object quizInfo {
 	remainingQuestions = tail; return Some(head)
       case Nil => None
     }
+  }
+
+  def name():String = currentQuiz match {
+    case yn:YesNoQuiz => yn.name
+    case mc:MultipleChoiceQuiz => mc.name
+  }
+
+  def yesText():String = currentQuiz match {
+    case yn:YesNoQuiz => yn.yesText
+  }
+
+  def noText():String = currentQuiz match {
+    case yn:YesNoQuiz => yn.noText
   }
 }
 
@@ -37,58 +53,6 @@ class quizQuestion extends Activity {
     val tr = new TableRow(this)
     tr.addView(v)
     tr
-  }
-
-  def askYesNoQuestion(question:YesNoQuestion) : Unit = {
-/*    val vg = new TableLayout(this)
-     
-    val title = new TextView(this)
-    title.setText(quizInfo.currentQuiz.name)
-    vg.addView(addRow(title))
-
-    val q = new TextView(this)
-    q.setText(question.question)
-    vg.addView(addRow(q))
-
-    val yesButton = new Button(this)
-    yesButton.setText(quizInfo.currentQuiz.yesText)
-    yesButton.setOnClickListener(new View.OnClickListener {
-      def onClick(v: View) {
-	question.rightAnswer match {
-	  case Yes() => quizInfo.score += 1
-	  case No() => ()
-	}
-        quizInfo.getNextQuestion match {
-	  case None =>
-	    val myIntent:Intent = new Intent(vg.getContext(), classOf[quizScore])
-            vg.getContext().startActivity(myIntent)
-	  case Some(question) => askNextQuestion(question)
-	}
-	
-      }
-    } )
-    vg.addView(addRow(yesButton))
-
-    val noButton = new Button(this)
-    noButton.setText(quizInfo.currentQuiz.noText)
-    noButton.setOnClickListener(new View.OnClickListener {
-      def onClick(v: View) {
-	question.rightAnswer match {
-	  case No() => quizInfo.score += 1
-	  case Yes() => ()
-	}
-        quizInfo.getNextQuestion match {
-	  case None =>
-	    val myIntent:Intent = new Intent(vg.getContext(), classOf[quizScore])
-            vg.getContext().startActivity(myIntent)
-	  case Some(question) => askNextQuestion(question)
-	}
-      }
-    } )
-    vg.addView(addRow(noButton))
-
-    setContentView(vg)
-*/
   }
 
   def makeAnswerButton(text: String, currentType: Answers, rightAnswer: Answers) = {
@@ -110,11 +74,28 @@ class quizQuestion extends Activity {
     addRow(button)
   }
 
+  def askYesNoQuestion(question:YesNoQuestion) : Unit = {
+    val vg = new TableLayout(this)
+     
+    val title = new TextView(this)
+    title.setText(quizInfo.name)
+    vg.addView(addRow(title))
+
+    val q = new TextView(this)
+    q.setText(question.question)
+    vg.addView(addRow(q))
+
+    vg.addView(makeAnswerButton(quizInfo.yesText,Yes(), question.rightAnswer))
+    vg.addView(makeAnswerButton(quizInfo.noText,No(), question.rightAnswer))
+
+    setContentView(vg)
+  }
+
   def askMultipleChoiceQuestion(question:MultipleChoiceQuestion) : Unit = {
     val vg = new TableLayout(this)
      
     val title = new TextView(this)
-    title.setText(quizInfo.currentQuiz.name)
+    title.setText(quizInfo.name)
     vg.addView(addRow(title))
 
     val q = new TextView(this)
