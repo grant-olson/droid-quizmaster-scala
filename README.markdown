@@ -22,7 +22,16 @@ Install
 
 1. Clone the repository.
 
-2. run 'ant install'.
+2. Copy the files 'scala-compiler.jar' and 'scala-library.jar' from
+   $SCALA_HOME/lib to the tools/ directory.
+
+3. Copy the files 'proguard.jar' and 'retrace.jar' from
+   $PROGUARD_HOME/lib to the tools/ directory.
+
+4. run 'ant install'.
+
+### Note:  Run 'export ANT_OPTS=-XMX1024M' if you run out of heap
+space while building.
 
 Have Fun
 --------
