@@ -9,15 +9,14 @@ import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
 
 object quizInfo {
-  var star_trek_quiz = starTrek.quiz
-
-  var remaining_questions = starTrek.quiz.questions
+  var currentQuiz = net.grantolson.quizmaster.quizzes.starTrek.quiz
+  var remainingQuestions = starTrek.quiz.questions
   var score = 0
 
   def getNextQuestion():Option[YesNoQuestion] = {
-    remaining_questions match {
+    remainingQuestions match {
       case head :: tail =>
-	remaining_questions = tail; return Some(head)
+	remainingQuestions = tail; return Some(head)
       case Nil => None
     }
   }
@@ -44,7 +43,7 @@ class quizQuestion extends Activity {
     val vg = new TableLayout(this)
      
     val title = new TextView(this)
-    title.setText(starTrek.quiz.name)
+    title.setText(quizInfo.currentQuiz.name)
     vg.addView(addRow(title))
 
     val q = new TextView(this)
@@ -52,7 +51,7 @@ class quizQuestion extends Activity {
     vg.addView(addRow(q))
 
     val yesButton = new Button(this)
-    yesButton.setText(starTrek.quiz.yesText)
+    yesButton.setText(quizInfo.currentQuiz.yesText)
     yesButton.setOnClickListener(new View.OnClickListener {
       def onClick(v: View) {
 	question.rightAnswer match {
@@ -71,7 +70,7 @@ class quizQuestion extends Activity {
     vg.addView(addRow(yesButton))
 
     val noButton = new Button(this)
-    noButton.setText(starTrek.quiz.noText)
+    noButton.setText(quizInfo.currentQuiz.noText)
     noButton.setOnClickListener(new View.OnClickListener {
       def onClick(v: View) {
 	question.rightAnswer match {
