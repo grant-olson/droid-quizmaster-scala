@@ -16,6 +16,15 @@ object quizInfo {
   }
   var score = 0
 
+  def reset(quiz:Quiz): Unit = {
+    currentQuiz = quiz
+    remainingQuestions = currentQuiz match {
+      case yn:YesNoQuiz => yn.questions
+      case mc:MultipleChoiceQuiz => mc.questions
+    }
+    score = 0
+  }
+
   def getNextQuestion():Option[QuestionType] = {
     remainingQuestions match {
       case head :: tail =>
@@ -133,19 +142,27 @@ class quizQuestion extends Activity {
 
 class startquizmaster extends Activity {
 
-  override def onCreate(savedInstanceState:Bundle) : Unit = {
-    super.onCreate(savedInstanceState)
-    val startButton = new android.widget.Button(this)
-    startButton.setText("Click Here to Start")
-    startButton.setOnClickListener(new View.OnClickListener {
+  def quizButton(name:String, quiz:Quiz) = {
+    val button = new android.widget.Button(this)
+    button.setText("Plau " + name + " Trivia")
+    val me = this
+    button.setOnClickListener(new View.OnClickListener {
       def onClick(v: View) {
-        val myIntent:Intent = new Intent(v.getContext(), classOf[quizQuestion])
-        v.getContext().startActivity(myIntent)
+	quizInfo.reset(quiz)
+        val myIntent:Intent = new Intent(me, classOf[quizQuestion])
+        me.startActivity(myIntent)
       }
     } )
+    button
+  }
+			 
 
+  override def onCreate(savedInstanceState:Bundle) : Unit = {
+    super.onCreate(savedInstanceState)
     val vg = new LinearLayout(this)
-    vg.addView(startButton)
+
+    vg.addView(quizButton("Star Trek", starTrek.quiz))
+    vg.addView(quizButton("Movie", movies.quiz))
 
     setContentView(vg)
   }
