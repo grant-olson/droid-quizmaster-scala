@@ -55,7 +55,7 @@ class quizScore extends Activity {
   override def onCreate(savedInstanceState:Bundle) : Unit = {
     super.onCreate(savedInstanceState)
     val text = new TextView(this)
-    text.setText("Your score was " + quizInfo.score)
+    text.setText("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n")
     setContentView(text)
   }
 }
