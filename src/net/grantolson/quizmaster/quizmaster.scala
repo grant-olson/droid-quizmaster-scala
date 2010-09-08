@@ -15,6 +15,8 @@ object quizInfo {
     case mc:MultipleChoiceQuiz => mc.questions
   }
   var score = 0
+  var currentQuestion = 1
+  var totalQuestions = 1
 
   def reset(quiz:Quiz): Unit = {
     currentQuiz = quiz
@@ -23,6 +25,8 @@ object quizInfo {
       case mc:MultipleChoiceQuiz => mc.questions
     }
     score = 0
+    currentQuestion = 1
+    totalQuestions = remainingQuestions.length
   }
 
   def getNextQuestion():Option[QuestionType] = {
@@ -64,12 +68,20 @@ class quizQuestion extends Activity {
     tr
   }
 
+  def makeText(text: String): TableRow = {
+    val textBox = new TextView(this)
+    textBox.setText(text)
+    
+    addRow(textBox)
+  }
+
   def makeAnswerButton(text: String, currentType: Answers, rightAnswer: Answers) = {
     val button = new Button(this)
     button.setText(text)
     val me = this // 'this' in the anon class won't work
     button.setOnClickListener(new View.OnClickListener {
       def onClick(v: View) {
+	quizInfo.currentQuestion += 1
 	if (currentType == rightAnswer) { quizInfo.score += 1 }
         quizInfo.getNextQuestion match {
 	  case None =>
@@ -83,49 +95,36 @@ class quizQuestion extends Activity {
     addRow(button)
   }
 
-  def askYesNoQuestion(question:YesNoQuestion) : Unit = {
-    val vg = new TableLayout(this)
-     
-    val title = new TextView(this)
-    title.setText(quizInfo.name)
-    vg.addView(addRow(title))
-
-    val q = new TextView(this)
-    q.setText(question.question)
-    vg.addView(addRow(q))
-
+  def askYesNoQuestion(vg:ViewGroup,question:YesNoQuestion) : Unit = {
+    vg.addView(makeText(question.question))
+    
     vg.addView(makeAnswerButton(quizInfo.yesText,Yes(), question.rightAnswer))
     vg.addView(makeAnswerButton(quizInfo.noText,No(), question.rightAnswer))
-
-    setContentView(vg)
   }
 
-  def askMultipleChoiceQuestion(question:MultipleChoiceQuestion) : Unit = {
-    val vg = new TableLayout(this)
-     
-    val title = new TextView(this)
-    title.setText(quizInfo.name)
-    vg.addView(addRow(title))
-
-    val q = new TextView(this)
-    q.setText(question.question)
-    vg.addView(addRow(q))
-
+  def askMultipleChoiceQuestion(vg:ViewGroup,question:MultipleChoiceQuestion) : Unit = {
+    vg.addView(makeText(question.question))
+    
     vg.addView(makeAnswerButton(question.A, A(), question.rightAnswer))
     vg.addView(makeAnswerButton(question.B, B(), question.rightAnswer))
     vg.addView(makeAnswerButton(question.C, C(), question.rightAnswer))
     vg.addView(makeAnswerButton(question.D, D(), question.rightAnswer))
-
-    setContentView(vg)
-
   }
 
 
   def askNextQuestion(question:QuestionType) : Unit = {
+    val vg = new TableLayout(this)
+
+    vg.addView(makeText(quizInfo.name))
+
     question match {
-      case yn:YesNoQuestion => askYesNoQuestion(yn)
-      case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(m)
+      case yn:YesNoQuestion => askYesNoQuestion(vg, yn)
+      case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(vg, m)
     }
+
+    vg.addView(makeText("\n\nQuestion " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions))
+    
+    setContentView(vg)
   }
 
   override def onCreate(savedInstanceState:Bundle) : Unit = {
@@ -163,7 +162,6 @@ class startquizmaster extends Activity {
 
     vg.addView(quizButton("Star Trek", starTrek.quiz))
     vg.addView(quizButton("Movie", movies.quiz))
-
     setContentView(vg)
   }
 
