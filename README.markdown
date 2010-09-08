@@ -30,8 +30,7 @@ Install
 
 4. run 'ant install'.
 
-### Note:  Run 'export ANT_OPTS=-XMX1024M' if you run out of heap
-space while building.
+### Note:  Run 'export ANT_OPTS=-XMX1024M' if you run out of heap space while building.
 
 Have Fun
 --------
