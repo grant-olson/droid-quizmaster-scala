@@ -18,6 +18,8 @@ object quizInfo {
   var currentQuestion = 1
   var totalQuestions = 1
 
+  var flashText:Option[String] = None
+  
   def reset(quiz:Quiz): Unit = {
     currentQuiz = quiz
     remainingQuestions = currentQuiz match {
@@ -27,6 +29,14 @@ object quizInfo {
     score = 0
     currentQuestion = 1
     totalQuestions = remainingQuestions.length
+  }
+
+  def yankFlashText():String = {
+    flashText match {
+      case None => ""
+      case Some(x) =>
+	flashText = None;x
+    }
   }
 
   def getNextQuestion():Option[QuestionType] = {
@@ -82,7 +92,13 @@ class quizQuestion extends Activity {
     button.setOnClickListener(new View.OnClickListener {
       def onClick(v: View) {
 	quizInfo.currentQuestion += 1
-	if (currentType == rightAnswer) { quizInfo.score += 1 }
+	if (currentType == rightAnswer)
+	 {
+	   quizInfo.score += 1
+	   quizInfo.flashText = Some("\n" + goodFeedback.getFeedback() + "\n\n")
+	 }
+	else
+	  { quizInfo.flashText = Some("\n" + badFeedback.getFeedback() + "\n\n") }
         quizInfo.getNextQuestion match {
 	  case None =>
 	    val myIntent:Intent = new Intent(me, classOf[quizScore])
@@ -116,6 +132,8 @@ class quizQuestion extends Activity {
     val vg = new TableLayout(this)
 
     vg.addView(makeText(quizInfo.name))
+
+    vg.addView(makeText(quizInfo.yankFlashText()))
 
     question match {
       case yn:YesNoQuestion => askYesNoQuestion(vg, yn)
