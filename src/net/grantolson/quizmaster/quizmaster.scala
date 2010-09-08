@@ -103,14 +103,30 @@ trait layoutHelp extends Activity {
   def makeTable(): TableLayout = {
     new TableLayout(this)
   }
+
+  def makeQuizButton(text:String, quiz:Quiz) = {
+    val button = new android.widget.Button(this)
+    button.setText("Play " + text + " Trivia")
+    val me = this
+    button.setOnClickListener(new View.OnClickListener {
+      def onClick(v: View) {
+	quizInfo.reset(quiz)
+        val myIntent:Intent = new Intent(me, classOf[quizQuestion])
+        me.startActivity(myIntent)
+      }
+    } )
+    button
+  }
+			 
+
 }
 
-class quizScore extends Activity {
+class quizScore extends Activity with layoutHelp {
   override def onCreate(savedInstanceState:Bundle) : Unit = {
     super.onCreate(savedInstanceState)
-    val text = new TextView(this)
-    text.setText("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n")
-    setContentView(text)
+    val table = makeTable()
+    table.addView(addRow(makeText("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n")))
+    setContentView(table)
   }
 }
 
@@ -134,20 +150,20 @@ class quizQuestion extends Activity with layoutHelp {
 
 
   def askNextQuestion(question:QuestionType) : Unit = {
-    val vg = makeTable()
+    val table = makeTable()
 
-    vg.addView(makeText(quizInfo.name))
+    table.addView(makeText(quizInfo.name))
 
-    vg.addView(makeText(quizInfo.yankFlashText()))
+    table.addView(makeText(quizInfo.yankFlashText()))
 
     question match {
-      case yn:YesNoQuestion => askYesNoQuestion(vg, yn)
-      case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(vg, m)
+      case yn:YesNoQuestion => askYesNoQuestion(table, yn)
+      case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(table, m)
     }
 
-    vg.addView(makeText("\n\nQuestion " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions))
+    table.addView(makeText("\n\nQuestion " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions))
     
-    setContentView(vg)
+    setContentView(table)
   }
 
   override def onCreate(savedInstanceState:Bundle) : Unit = {
@@ -162,30 +178,16 @@ class quizQuestion extends Activity with layoutHelp {
   }
 }
 
-class startquizmaster extends Activity {
+class startquizmaster extends Activity with layoutHelp {
 
-  def quizButton(name:String, quiz:Quiz) = {
-    val button = new android.widget.Button(this)
-    button.setText("Plau " + name + " Trivia")
-    val me = this
-    button.setOnClickListener(new View.OnClickListener {
-      def onClick(v: View) {
-	quizInfo.reset(quiz)
-        val myIntent:Intent = new Intent(me, classOf[quizQuestion])
-        me.startActivity(myIntent)
-      }
-    } )
-    button
-  }
-			 
 
   override def onCreate(savedInstanceState:Bundle) : Unit = {
     super.onCreate(savedInstanceState)
-    val vg = new LinearLayout(this)
+    val table = makeTable()
 
-    vg.addView(quizButton("Star Trek", starTrek.quiz))
-    vg.addView(quizButton("Movie", movies.quiz))
-    setContentView(vg)
+    table.addView(addRow(makeQuizButton("Star Trek", starTrek.quiz)))
+    table.addView(addRow(makeQuizButton("Movie", movies.quiz)))
+    setContentView(table)
   }
 
 
