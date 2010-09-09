@@ -13,6 +13,10 @@ class quizScore extends Activity with layoutHelp {
     super.onCreate(savedInstanceState)
     val table = makeTable()
     table.addView(addRow(makeText("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n")))
+    table.addView(addRow(makeButton("Play again", { view: View =>
+        val myIntent:Intent = new Intent(this, classOf[startquizmaster])
+        this.startActivity(myIntent) } ))) 
+
     setContentView(table)
   }
 }

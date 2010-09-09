@@ -53,6 +53,17 @@ trait layoutHelp extends Activity {
     new TableLayout(this)
   }
 
+  def makeButton(text:String, action: View => Unit ) = {
+    val button = new android.widget.Button(this)
+    button.setText(text)
+    button.setOnClickListener(new View.OnClickListener {
+      def onClick(v: View) {
+	action(v)
+      }
+    })
+    button
+  }
+
   def makeQuizButton(text:String, quiz:Quiz) = {
     val button = new android.widget.Button(this)
     button.setText("Play " + text + " Trivia")
