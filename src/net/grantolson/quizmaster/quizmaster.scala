@@ -14,7 +14,7 @@ class quizScore extends Activity with layoutHelp {
     val table = makeTable()
     table.addView(addRow(makeText("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n")))
     table.addView(addRow(makeButton("Play again", { view: View =>
-        val myIntent:Intent = new Intent(this, classOf[startquizmaster])
+        val myIntent:Intent = new Intent(this, classOf[quizStartMenu])
         this.startActivity(myIntent) } ))) 
 
     setContentView(table)
@@ -63,13 +63,13 @@ class quizQuestion extends Activity with layoutHelp {
     quizInfo.getNextQuestion() match {
       case Some(question) => askNextQuestion(question)
       case None =>
-        val myIntent:Intent = new Intent(this, classOf[startquizmaster])
+        val myIntent:Intent = new Intent(this, classOf[quizStartMenu])
         this.startActivity(myIntent)
     }
   }
 }
 
-class startquizmaster extends Activity with layoutHelp {
+class quizStartMenu extends Activity with layoutHelp {
 
 
   override def onCreate(savedInstanceState:Bundle) : Unit = {
