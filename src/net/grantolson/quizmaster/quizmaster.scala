@@ -11,13 +11,20 @@ import net.grantolson.quizmaster.quizzes._
 class quizScore extends Activity with layoutHelp {
   override def onCreate(savedInstanceState:Bundle) : Unit = {
     super.onCreate(savedInstanceState)
-    val table = makeTable()
-    table.addView(addRow(makeText("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n")))
-    table.addView(addRow(makeButton("Play again", { view: View =>
-        val myIntent:Intent = new Intent(this, classOf[quizStartMenu])
-        this.startActivity(myIntent) } ))) 
 
-    setContentView(table)
+    startLayout()
+
+    startRow()
+    addText("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n")
+    endRow()
+
+    startRow()
+    addButton("Play again", { view: View =>
+        val myIntent:Intent = new Intent(this, classOf[quizStartMenu])
+        this.startActivity(myIntent) } )
+    endRow()
+
+    endLayout()
   }
 }
 
@@ -74,11 +81,29 @@ class quizStartMenu extends Activity with layoutHelp {
 
   override def onCreate(savedInstanceState:Bundle) : Unit = {
     super.onCreate(savedInstanceState)
-    val table = makeTable()
 
-    table.addView(addRow(makeQuizButton("Star Trek", starTrek.quiz)))
-    table.addView(addRow(makeQuizButton("Movie", movies.quiz)))
-    setContentView(table)
+    startLayout()
+    startRow()
+    addText("Welcome to QuizMaster!")
+    endRow()
+
+    startRow()
+    addButton("Play Star Trek Trivia!",
+	      { v:View => quizInfo.reset(starTrek.quiz)
+	       val myIntent:Intent = new Intent(this, classOf[quizQuestion])
+	       this.startActivity(myIntent)
+	     })
+    endRow()
+
+    startRow()
+    addButton("Play Movie Trivia!",
+	      { v:View => quizInfo.reset(movies.quiz)
+	       val myIntent:Intent = new Intent(this, classOf[quizQuestion])
+	       this.startActivity(myIntent)
+	     })
+    endRow()
+
+    endLayout()
   }
 
 

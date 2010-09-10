@@ -10,11 +10,59 @@ import net.grantolson.quizmaster.quizzes._
 
 
 trait layoutHelp extends Activity {
+  var currentTable: Option[TableLayout] = None
+  var currentRow: Option[List[View]] = None
+
+  def startLayout(): Unit = {
+    currentTable = Some(new TableLayout(this))
+  }
+    
+  def endLayout(): Unit = {
+    val v = currentTable match { case Some(tl) => tl }
+    currentTable = None
+    setContentView(v)
+  }
+
+  def startRow(): Unit = {
+    currentRow = Some(List[View]())
+  }
+
+  def endRow(): Unit = {
+    val tr = new TableRow(this)
+    currentRow match { case Some(lv) => lv.reverse.map { v => tr.addView(v) } }
+    currentRow = None
+    currentTable match { case Some(ct) => ct.addView(tr) }
+  }
+    
+
+  def addToRow(v:View): Unit = {
+    currentRow = currentRow match { case Some(lv) => Some(v :: lv) }
+  }
+
+  def addText(text: String): Unit = {
+    val textBox = new TextView(this)
+    textBox.setText(text)
+    addToRow(textBox)
+  }
+
+  def addButton(text: String, action: View => Unit): Unit = {
+    val button = new Button(this)
+    button.setText(text)
+    button.setOnClickListener(new View.OnClickListener {
+      def onClick(v: View) {
+	action(v)
+      }
+    })
+    addToRow(button)
+  }
+
+  // These will be gone
   def addRow(v:View):TableRow = {
     val tr = new TableRow(this)
     tr.addView(v)
     tr
   }
+
 
   def makeText(text: String): TableRow = {
     val textBox = new TextView(this)
@@ -52,31 +100,5 @@ trait layoutHelp extends Activity {
   def makeTable(): TableLayout = {
     new TableLayout(this)
   }
-
-  def makeButton(text:String, action: View => Unit ) = {
-    val button = new android.widget.Button(this)
-    button.setText(text)
-    button.setOnClickListener(new View.OnClickListener {
-      def onClick(v: View) {
-	action(v)
-      }
-    })
-    button
-  }
-
-  def makeQuizButton(text:String, quiz:Quiz) = {
-    val button = new android.widget.Button(this)
-    button.setText("Play " + text + " Trivia")
-    val me = this
-    button.setOnClickListener(new View.OnClickListener {
-      def onClick(v: View) {
-	quizInfo.reset(quiz)
-        val myIntent:Intent = new Intent(me, classOf[quizQuestion])
-        me.startActivity(myIntent)
-      }
-    } )
-    button
-  }
-			 
 
 }
