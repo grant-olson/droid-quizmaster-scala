@@ -1,10 +1,10 @@
 package net.grantolson.quizmaster
 
-trait randomizedFeedback {
-  val options:Array[String] = Array[String]("good")
+abstract class randomizedFeedback {
+  val options:Array[String]
   val rng = new scala.util.Random()
   
-  def getFeedback(): String = {
+  def apply(): String = {
     val random = rng.nextInt(options.length)
     options(random)
   }

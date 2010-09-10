@@ -33,10 +33,10 @@ trait layoutHelp extends Activity {
 	if (currentType == rightAnswer)
 	 {
 	   quizInfo.score += 1
-	   quizInfo.flashText = Some("\n" + goodFeedback.getFeedback() + "\n\n")
+	   quizInfo.flashText = Some("\n" + goodFeedback() + "\n\n")
 	 }
 	else
-	  { quizInfo.flashText = Some("\n" + badFeedback.getFeedback() + "\n\n") }
+	  { quizInfo.flashText = Some("\n" + badFeedback() + "\n\n") }
         quizInfo.getNextQuestion match {
 	  case None =>
 	    val myIntent:Intent = new Intent(me, classOf[quizScore])
