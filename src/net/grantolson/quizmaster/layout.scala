@@ -14,8 +14,12 @@ trait layout extends Activity {
   var currentTable: Option[TableLayout] = None
   var currentRow: Option[List[View]] = None
 
+  private val MAX_WIDTH = 320 // this isn't queryable in droid 1.5
+
   def startLayout(): Unit = {
-    currentTable = Some(new TableLayout(this))
+    val tl = new TableLayout(this)
+    tl.setStretchAllColumns(true)
+    currentTable = Some(tl)
   }
     
   def endLayout(): Unit = {
@@ -55,6 +59,8 @@ trait layout extends Activity {
  
   def addText(text: String, face:Typeface = Typeface.DEFAULT, style:Int = Typeface.NORMAL): Unit = {
     val textBox = new TextView(this)
+    textBox.setSingleLine(false)
+    textBox.setMaxWidth(MAX_WIDTH)
     textBox.setTypeface(android.graphics.Typeface.create(face,style))
     textBox.setText(text)
     addToRow(textBox)
