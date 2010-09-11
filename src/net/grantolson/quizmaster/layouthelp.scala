@@ -18,7 +18,10 @@ trait layoutHelp extends Activity {
   }
     
   def endLayout(): Unit = {
-    val v = currentTable match { case Some(tl) => tl }
+    val v = currentTable match {
+      case Some(tl) => tl
+      case None => throw new Exception ("Oops!  Need to call startLayout() first!")
+    }
     currentTable = None
     setContentView(v)
   }
@@ -29,14 +32,24 @@ trait layoutHelp extends Activity {
 
   def endRow(): Unit = {
     val tr = new TableRow(this)
-    currentRow match { case Some(lv) => lv.reverse.map { v => tr.addView(v) } }
+    currentRow match {
+      case Some(lv) => lv.reverse.map { v => tr.addView(v) }
+      case None => throw new Exception ("Oops!  Need to call startRow() First!")
+    }
+    
     currentRow = None
-    currentTable match { case Some(ct) => ct.addView(tr) }
+    currentTable match {
+      case Some(ct) => ct.addView(tr)
+      case None => throw new Exception ("Oops!  Need to call startLayout() First!")
+    }
   }
     
 
   def addToRow(v:View): Unit = {
-    currentRow = currentRow match { case Some(lv) => Some(v :: lv) }
+    currentRow = currentRow match {
+      case Some(lv) => Some(v :: lv)
+      case None => throw new Exception ("Oops!  need to call starRow() first!")
+    }
   }
 
   def addText(text: String): Unit = {
