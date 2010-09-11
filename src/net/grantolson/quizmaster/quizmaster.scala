@@ -8,7 +8,7 @@ import android.content.Intent
 import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
 
-class quizScore extends Activity with layoutHelp {
+class quizScore extends Activity with layout {
   override def onCreate(savedInstanceState:Bundle) : Unit = {
     super.onCreate(savedInstanceState)
 
@@ -25,7 +25,7 @@ class quizScore extends Activity with layoutHelp {
 }
 
 
-class quizQuestion extends Activity with layoutHelp {
+class quizQuestion extends Activity with layout {
 
   def answerAction ( currentType: Answers, rightAnswer: Answers, nextAction: QuestionType => Unit )  = {
     quizInfo.currentQuestion += 1
@@ -90,7 +90,7 @@ class quizQuestion extends Activity with layoutHelp {
   }
 }
 
-class quizStartMenu extends Activity with layoutHelp {
+class quizStartMenu extends Activity with layout {
 
 
   override def onCreate(savedInstanceState:Bundle) : Unit = {

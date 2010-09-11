@@ -9,7 +9,7 @@ import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
 
 
-trait layoutHelp extends Activity {
+trait layout extends Activity {
   var currentTable: Option[TableLayout] = None
   var currentRow: Option[List[View]] = None
 
