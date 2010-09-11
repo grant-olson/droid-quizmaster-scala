@@ -30,38 +30,82 @@ class quizScore extends Activity with layoutHelp {
 
 
 class quizQuestion extends Activity with layoutHelp {
-  def askYesNoQuestion(vg:ViewGroup,question:YesNoQuestion) : Unit = {
-    vg.addView(makeText(question.question))
- 
-    vg.addView(makeAnswerButton(quizInfo.yesText,Yes(), question.rightAnswer, { q => askNextQuestion(q) }))
-    vg.addView(makeAnswerButton(quizInfo.noText,No(), question.rightAnswer,{ q => askNextQuestion(q) }))
+
+  def answerAction ( currentType: Answers, rightAnswer: Answers, nextAction: QuestionType => Unit )  = {
+    quizInfo.currentQuestion += 1
+    if (currentType == rightAnswer) {
+      quizInfo.score += 1
+      quizInfo.flashText = Some("\n" + goodFeedback() + "\n\n")
+    } else {
+      quizInfo.flashText = Some("\n" + badFeedback() + "\n\n")
+    }
+    quizInfo.getNextQuestion match {
+      case None =>
+	val myIntent:Intent = new Intent(this, classOf[quizScore])
+        this.startActivity(myIntent)
+      case Some(question) => nextAction(question)
+    }
   }
 
-  def askMultipleChoiceQuestion(vg:ViewGroup,question:MultipleChoiceQuestion) : Unit = {
-    vg.addView(makeText(question.question))
+  def askYesNoQuestion(question:YesNoQuestion) : Unit = {
+    startRow()
+    addText(question.question)
+    endRow()
+
+    startRow()
+    addButton(quizInfo.yesText, { v:View => answerAction(Yes(), question.rightAnswer, { q => askNextQuestion(q) } ) })
+    endRow()
+
+    startRow()
+    addButton(quizInfo.noText, { v:View => answerAction(No(), question.rightAnswer, { q => askNextQuestion(q) } ) })
+    endRow()
+ 
+  }
+
+  def askMultipleChoiceQuestion(question:MultipleChoiceQuestion) : Unit = {
+
+    startRow()
+    addText(question.question)
     
-    vg.addView(makeAnswerButton(question.A, A(), question.rightAnswer,{ q => askNextQuestion(q) }))
-    vg.addView(makeAnswerButton(question.B, B(), question.rightAnswer,{ q => askNextQuestion(q) }))
-    vg.addView(makeAnswerButton(question.C, C(), question.rightAnswer,{ q => askNextQuestion(q) }))
-    vg.addView(makeAnswerButton(question.D, D(), question.rightAnswer,{ q => askNextQuestion(q) }))
+    startRow()
+    addButton(question.A, { v => answerAction(A(), question.rightAnswer, { q => askNextQuestion(q) }) })
+    endRow()
+
+    startRow()
+    addButton(question.B, { v => answerAction(B(), question.rightAnswer, { q => askNextQuestion(q) }) })
+    endRow()
+
+    startRow()
+    addButton(question.C, { v => answerAction(C(), question.rightAnswer, { q => askNextQuestion(q) }) })
+    endRow()
+
+    startRow()
+    addButton(question.D, { v => answerAction(D(), question.rightAnswer, { q => askNextQuestion(q) }) })
+    endRow()
   }
 
 
   def askNextQuestion(question:QuestionType) : Unit = {
-    val table = makeTable()
+    startLayout()
 
-    table.addView(makeText(quizInfo.name))
+    startRow()
+    addText(quizInfo.name)
+    endRow()
 
-    table.addView(makeText(quizInfo.yankFlashText()))
+    startRow()
+    addText(quizInfo.yankFlashText())
+    endRow()
 
     question match {
-      case yn:YesNoQuestion => askYesNoQuestion(table, yn)
-      case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(table, m)
+      case yn:YesNoQuestion => askYesNoQuestion(yn)
+      case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(m)
     }
 
-    table.addView(makeText("\n\nQuestion " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions))
-    
-    setContentView(table)
+    startRow()
+    addText("\n\nQuestion " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions)
+    endRow()
+
+    endLayout()
   }
 
   override def onCreate(savedInstanceState:Bundle) : Unit = {
