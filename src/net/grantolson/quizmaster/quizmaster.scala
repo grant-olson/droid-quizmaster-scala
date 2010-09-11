@@ -5,6 +5,8 @@ import android.view._
 import android.widget._
 import android.os.Bundle
 import android.content.Intent
+import android.graphics.Typeface
+
 import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
 
@@ -14,7 +16,7 @@ class quizScore extends Activity with layout {
 
     startLayout()
 
-    addTextRow("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n")
+    addTextRow("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n", style=Typeface.BOLD)
 
     addButtonRow("Play again", { view: View =>
         val myIntent:Intent = new Intent(this, classOf[quizStartMenu])
@@ -64,16 +66,16 @@ class quizQuestion extends Activity with layout {
   def askNextQuestion(question:QuestionType) : Unit = {
     startLayout()
 
-    addTextRow(quizInfo.name)
+    addTextRow(quizInfo.name, style=Typeface.BOLD)
 
-    addTextRow(quizInfo.yankFlashText())
+    addTextRow(quizInfo.yankFlashText(), face=Typeface.SANS_SERIF, style=Typeface.BOLD_ITALIC)
 
     question match {
       case yn:YesNoQuestion => askYesNoQuestion(yn)
       case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(m)
     }
 
-    addTextRow("\n\nQuestion " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions)
+    addTextRow("\n\nQuestion " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions, style=Typeface.BOLD)
 
     endLayout()
   }
@@ -98,7 +100,7 @@ class quizStartMenu extends Activity with layout {
 
     startLayout()
     startRow()
-    addText("Welcome to QuizMaster!")
+    addText("Welcome to QuizMaster!", style=Typeface.BOLD)
     endRow()
 
     startRow()

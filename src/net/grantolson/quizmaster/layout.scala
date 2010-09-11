@@ -5,9 +5,10 @@ import android.view._
 import android.widget._
 import android.os.Bundle
 import android.content.Intent
+import android.graphics.Typeface
+
 import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
-
 
 trait layout extends Activity {
   var currentTable: Option[TableLayout] = None
@@ -51,16 +52,17 @@ trait layout extends Activity {
       case None => throw new Exception ("Oops!  need to call starRow() first!")
     }
   }
-
-  def addText(text: String): Unit = {
+ 
+  def addText(text: String, face:Typeface = Typeface.DEFAULT, style:Int = Typeface.NORMAL): Unit = {
     val textBox = new TextView(this)
+    textBox.setTypeface(android.graphics.Typeface.create(face,style))
     textBox.setText(text)
     addToRow(textBox)
   }
 
-  def addTextRow(text: String): Unit = {
+  def addTextRow(text: String, face:Typeface = Typeface.DEFAULT, style: Int = Typeface.NORMAL): Unit = {
     startRow()
-    addText(text)
+    addText(text,face,style)
     endRow()
   }
 
