@@ -58,6 +58,12 @@ trait layoutHelp extends Activity {
     addToRow(textBox)
   }
 
+  def addTextRow(text: String): Unit = {
+    startRow()
+    addText(text)
+    endRow()
+  }
+
   def addButton(text: String, action: View => Unit): Unit = {
     val button = new Button(this)
     button.setText(text)
@@ -67,6 +73,12 @@ trait layoutHelp extends Activity {
       }
     })
     addToRow(button)
+  }
+  
+  def addButtonRow(text: String, action: View => Unit): Unit = {
+    startRow()
+    addButton(text, action)
+    endRow()
   }
 
 }
