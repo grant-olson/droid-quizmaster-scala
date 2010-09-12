@@ -6,6 +6,7 @@ import android.widget._
 import android.os.Bundle
 import android.content.Intent
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 
 import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
@@ -19,7 +20,13 @@ trait layout extends Activity {
   def startLayout(): Unit = {
     val tl = new TableLayout(this)
     tl.setStretchAllColumns(true)
+
+    tl.setBackgroundResource(R.drawable.background)
+
     currentTable = Some(tl)
+
+    addImageRow(R.drawable.quizmaster)
+
   }
     
   def endLayout(): Unit = {
@@ -57,6 +64,18 @@ trait layout extends Activity {
     }
   }
  
+  def addImage(resourceId:Int): Unit = {
+    val imageView = new ImageView(this)
+    imageView.setImageResource(resourceId)
+    addToRow(imageView)
+  }
+
+  def addImageRow(resourceId:Int): Unit = {
+    startRow()
+    addImage(resourceId)
+    endRow()
+  }
+
   def addText(text: String, face:Typeface = Typeface.DEFAULT, style:Int = Typeface.NORMAL): Unit = {
     val textBox = new TextView(this)
     textBox.setSingleLine(false)
