@@ -5,8 +5,8 @@ import net.grantolson.quizmaster.adts._
 object starTrek {
   val quiz = YesNoQuiz("Star Trek Character or Star Trek Actor?", "Star Trek Character",
 		       "Star Trek Actor", List[YesNoQuestion](
-			 YesNoQuestion("Armin Shimmerman", Yes()),
-			 YesNoQuestion("William Riker", No()),
+			 YesNoQuestion("Armin Shimmerman", No()),
+			 YesNoQuestion("William Riker", Yes()),
 			 YesNoQuestion("Gates McFadden", No()),
 			 YesNoQuestion("Tasha Yar", Yes()),
 			 YesNoQuestion("B'Elanna Torres", Yes()),
