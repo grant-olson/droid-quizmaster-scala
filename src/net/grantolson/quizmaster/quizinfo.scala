@@ -29,6 +29,7 @@ object quizInfo {
     score = 0
     currentQuestion = 1
     totalQuestions = remainingQuestions.length
+    flashText = None
   }
 
   def yankFlashText():String = {
