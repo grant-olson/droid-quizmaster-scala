@@ -6,6 +6,7 @@ import android.widget._
 import android.os.Bundle
 import android.content.Intent
 import android.graphics.Typeface
+import android.graphics.Color
 
 import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
@@ -33,9 +34,9 @@ class quizQuestion extends Activity with layout {
     quizInfo.currentQuestion += 1
     if (currentType == rightAnswer) {
       quizInfo.score += 1
-      quizInfo.flashText = Some("\n" + goodFeedback() + "\n\n")
+      quizInfo.flashText = Some("\n" + goodFeedback() + "\n", Color.RED)
     } else {
-      quizInfo.flashText = Some("\n" + badFeedback() + "\n\n")
+      quizInfo.flashText = Some("\n" + badFeedback() + "\n", Color.GREEN)
     }
     quizInfo.getNextQuestion match {
       case None =>
@@ -68,7 +69,11 @@ class quizQuestion extends Activity with layout {
 
     addTextRow(quizInfo.name, style=Typeface.BOLD)
 
-    addTextRow(quizInfo.yankFlashText(), face=Typeface.SANS_SERIF, style=Typeface.BOLD_ITALIC)
+    quizInfo.yankFlashText() match {
+      case Some( (s:String,color:Int) ) =>
+        addTextRow(s, face=Typeface.SANS_SERIF, style=Typeface.BOLD_ITALIC, color=color)
+      case None => ()
+    }
 
     question match {
       case yn:YesNoQuestion => askYesNoQuestion(yn)

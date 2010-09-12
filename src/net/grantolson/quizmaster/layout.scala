@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.content.Intent
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.graphics.Color
 
 import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
@@ -76,18 +77,19 @@ trait layout extends Activity {
     endRow()
   }
 
-  def addText(text: String, face:Typeface = Typeface.DEFAULT, style:Int = Typeface.NORMAL): Unit = {
+  def addText(text: String, face:Typeface = Typeface.DEFAULT, style:Int = Typeface.NORMAL, color:Int = Color.WHITE): Unit = {
     val textBox = new TextView(this)
     textBox.setSingleLine(false)
     textBox.setMaxWidth(MAX_WIDTH)
     textBox.setTypeface(android.graphics.Typeface.create(face,style))
     textBox.setText(text)
+    textBox.setTextColor(color)
     addToRow(textBox)
   }
 
-  def addTextRow(text: String, face:Typeface = Typeface.DEFAULT, style: Int = Typeface.NORMAL): Unit = {
+  def addTextRow(text: String, face:Typeface = Typeface.DEFAULT, style: Int = Typeface.NORMAL, color:Int = Color.WHITE): Unit = {
     startRow()
-    addText(text,face,style)
+    addText(text,face,style,color)
     endRow()
   }
 

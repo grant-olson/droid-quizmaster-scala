@@ -5,6 +5,8 @@ import android.view._
 import android.widget._
 import android.os.Bundle
 import android.content.Intent
+import android.graphics.Color
+
 import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
 
@@ -18,7 +20,7 @@ object quizInfo {
   var currentQuestion = 1
   var totalQuestions = 1
 
-  var flashText:Option[String] = None
+  var flashText:Option[(String,Int)] = None
   
   def reset(quiz:Quiz): Unit = {
     currentQuiz = quiz
@@ -32,12 +34,10 @@ object quizInfo {
     flashText = None
   }
 
-  def yankFlashText():String = {
-    flashText match {
-      case None => ""
-      case Some(x) =>
-	flashText = None;x
-    }
+  def yankFlashText(): Option[(String, Int)] = {
+    val ret = flashText
+    flashText = None
+    ret
   }
 
   def getNextQuestion():Option[QuestionType] = {
