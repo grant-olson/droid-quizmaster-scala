@@ -34,9 +34,9 @@ class quizQuestion extends Activity with layout {
     quizInfo.currentQuestion += 1
     if (currentType == rightAnswer) {
       quizInfo.score += 1
-      quizInfo.flashText = Some("\n" + goodFeedback() + "\n", Color.RED)
+      quizInfo.flashText = Some(goodFeedback() + "\n", Color.GREEN)
     } else {
-      quizInfo.flashText = Some("\n" + badFeedback() + "\n", Color.GREEN)
+      quizInfo.flashText = Some(badFeedback() + "\n", Color.RED)
     }
     quizInfo.getNextQuestion match {
       case None =>
@@ -67,8 +67,6 @@ class quizQuestion extends Activity with layout {
   def askNextQuestion(question:QuestionType) : Unit = {
     startLayout()
 
-    addTextRow(quizInfo.name, style=Typeface.BOLD)
-
     quizInfo.yankFlashText() match {
       case Some( (s:String,color:Int) ) =>
         addTextRow(s, face=Typeface.SANS_SERIF, style=Typeface.BOLD_ITALIC, color=color)
@@ -80,7 +78,8 @@ class quizQuestion extends Activity with layout {
       case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(m)
     }
 
-    addTextRow("\n\nQuestion " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions, style=Typeface.BOLD)
+
+    addTextRow("\n\n" + quizInfo.name + " - Question " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions, style=Typeface.BOLD)
 
     endLayout()
   }
