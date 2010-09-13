@@ -18,7 +18,6 @@ trait countdown extends Activity {
 	{
 	  def run() {
 	    countdown = countdown - 1
-   	    println(countdown.toString())
 	    if (countdown <= 0) {
     	      timer.cancel()
 	      stopAction()
