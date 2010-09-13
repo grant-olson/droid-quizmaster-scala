@@ -17,6 +17,7 @@ object quizInfo {
     case mc:MultipleChoiceQuiz => mc.questions
   }
   var score = 0
+  var rightAnswers = 0
   var currentQuestion = 1
   var totalQuestions = 1
 
@@ -29,6 +30,7 @@ object quizInfo {
       case mc:MultipleChoiceQuiz => mc.questions
     }
     score = 0
+    rightAnswers = 0
     currentQuestion = 1
     totalQuestions = remainingQuestions.length
     flashText = None

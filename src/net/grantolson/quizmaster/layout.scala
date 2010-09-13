@@ -77,7 +77,7 @@ trait layout extends Activity {
     endRow()
   }
 
-  def addText(text: String, face:Typeface = Typeface.DEFAULT, style:Int = Typeface.NORMAL, color:Int = Color.WHITE): Unit = {
+  def addText(text: String, face:Typeface = Typeface.DEFAULT, style:Int = Typeface.NORMAL, color:Int = Color.WHITE): TextView = {
     val textBox = new TextView(this)
     textBox.setSingleLine(false)
     textBox.setMaxWidth(MAX_WIDTH)
@@ -85,12 +85,14 @@ trait layout extends Activity {
     textBox.setText(text)
     textBox.setTextColor(color)
     addToRow(textBox)
+    textBox
   }
 
-  def addTextRow(text: String, face:Typeface = Typeface.DEFAULT, style: Int = Typeface.NORMAL, color:Int = Color.WHITE): Unit = {
+  def addTextRow(text: String, face:Typeface = Typeface.DEFAULT, style: Int = Typeface.NORMAL, color:Int = Color.WHITE): TextView = {
     startRow()
-    addText(text,face,style,color)
+    val textBox = addText(text,face,style,color)
     endRow()
+    textBox
   }
 
   def addButton(text: String, action: View => Unit): Unit = {

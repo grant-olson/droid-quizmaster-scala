@@ -12,12 +12,13 @@ import net.grantolson.quizmaster.adts._
 import net.grantolson.quizmaster.quizzes._
 
 class quizScore extends Activity with layout {
+
   override def onCreate(savedInstanceState:Bundle) : Unit = {
     super.onCreate(savedInstanceState)
 
     startLayout()
 
-    addTextRow("Your score was " + quizInfo.score + " out of " + quizInfo.totalQuestions + ".\n", style=Typeface.BOLD)
+    addTextRow("Your score was " + quizInfo.score + ".\n You answered " + quizInfo.rightAnswers + " out of " + quizInfo.totalQuestions + ".\n", style=Typeface.BOLD)
 
     addButtonRow("Play again", { view: View =>
         val myIntent:Intent = new Intent(this, classOf[quizStartMenu])
@@ -28,22 +29,31 @@ class quizScore extends Activity with layout {
 }
 
 
-class quizQuestion extends Activity with layout {
+class quizQuestion extends Activity with layout with countdown {
 
-  def answerAction ( currentType: Answers, rightAnswer: Answers, nextAction: QuestionType => Unit )  = {
-    quizInfo.currentQuestion += 1
-    if (currentType == rightAnswer) {
-      quizInfo.score += 1
-      quizInfo.flashText = Some(goodFeedback() + "\n", Color.GREEN)
-    } else {
-      quizInfo.flashText = Some(badFeedback() + "\n", Color.RED)
-    }
+  val COUNTDOWN = 8
+
+  def getNextQuestion(nextAction: QuestionType => Unit) {
     quizInfo.getNextQuestion match {
       case None =>
 	val myIntent:Intent = new Intent(this, classOf[quizScore])
         this.startActivity(myIntent)
       case Some(question) => nextAction(question)
     }
+  }
+
+
+  def answerAction ( currentType: Answers, rightAnswer: Answers, nextAction: QuestionType => Unit )  = {
+    timer.cancel()
+    quizInfo.currentQuestion += 1
+    if (currentType == rightAnswer) {
+      quizInfo.score += countdown
+      quizInfo.rightAnswers += 1
+      quizInfo.flashText = Some(goodFeedback() + "\n", Color.GREEN)
+    } else {
+      quizInfo.flashText = Some(badFeedback() + "\n", Color.RED)
+    }
+    getNextQuestion(nextAction)
   }
 
   def askYesNoQuestion(question:YesNoQuestion) : Unit = {
@@ -78,6 +88,14 @@ class quizQuestion extends Activity with layout {
       case m:MultipleChoiceQuestion => askMultipleChoiceQuestion(m)
     }
 
+
+    val countdownTextView = addTextRow(COUNTDOWN.toString())
+
+    createTimer(COUNTDOWN,
+		{i:Int => countdownTextView.setText(i.toString)},
+		{ _ =>
+		  quizInfo.flashText = Some(timeoutFeedback() + "\n", Color.RED)
+		  getNextQuestion({ q => askNextQuestion(q) }) })
 
     addTextRow("\n\n" + quizInfo.name + " - Question " + quizInfo.currentQuestion + " of " + quizInfo.totalQuestions, style=Typeface.BOLD)
 

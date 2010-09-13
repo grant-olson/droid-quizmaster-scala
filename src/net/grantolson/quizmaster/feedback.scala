@@ -18,3 +18,7 @@ object goodFeedback extends randomizedFeedback {
 object badFeedback extends randomizedFeedback {
   override val options = Array[String]("Lame.", "You can do better than that.", "Absolutely WRONG.", "Ignorance is Bliss")
 }
+
+object timeoutFeedback extends randomizedFeedback {
+  override val options = Array[String]("You're not even trying!", "You can do better than that!", "Just hit a button!  Any button!")
+}
