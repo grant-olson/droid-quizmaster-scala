@@ -94,8 +94,11 @@ class quizQuestion extends Activity with layout with countdown with sounds {
     val countdownTextView = addTextRow(COUNTDOWN.toString())
 
     createTimer(COUNTDOWN,
-		{i:Int => countdownTextView.setText(i.toString)},
+		{i:Int =>
+		 if (i < COUNTDOWN - 1 && i > 0) tick()
+		 countdownTextView.setText(i.toString)} ,
 		{ _ =>
+		  buzz()
 		  quizInfo.flashText = Some(timeoutFeedback() + "\n", Color.RED)
 		  getNextQuestion({ q => askNextQuestion(q) }) })
 
