@@ -14,5 +14,6 @@
         </activity>
 	<activity android:name=".quizQuestion" />
 	<activity android:name=".quizScore" />
+	<activity android:name=".quizAbout" />
     </application>
 </manifest> 
