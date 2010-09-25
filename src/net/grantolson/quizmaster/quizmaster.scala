@@ -29,7 +29,7 @@ class quizScore extends Activity with layout {
 }
 
 
-class quizQuestion extends Activity with layout with countdown {
+class quizQuestion extends Activity with layout with countdown with sounds {
 
   val COUNTDOWN = 8
 
@@ -49,8 +49,10 @@ class quizQuestion extends Activity with layout with countdown {
     if (currentType == rightAnswer) {
       quizInfo.score += countdown
       quizInfo.rightAnswers += 1
+      beep()
       quizInfo.flashText = Some(goodFeedback() + "\n", Color.GREEN)
     } else {
+      buzz()
       quizInfo.flashText = Some(badFeedback() + "\n", Color.RED)
     }
     getNextQuestion(nextAction)
