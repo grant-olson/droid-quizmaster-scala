@@ -125,7 +125,7 @@ class quizAbout extends quizBase {
   override def onCreate(savedInstanceState:Bundle) : Unit = {
     super.onCreate(savedInstanceState)
 
-    startLayout()
+    startScrollableLayout()
     startRow()
     addText("Quizmaster", style=Typeface.BOLD)
     endRow()
@@ -147,7 +147,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 """)
     endRow()
 
-    endLayout()
+    endScrollableLayout()
   }
 }
 

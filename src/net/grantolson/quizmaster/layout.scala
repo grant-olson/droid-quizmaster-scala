@@ -30,14 +30,25 @@ trait layout extends Activity {
 
   }
     
-  def endLayout(): Unit = {
+  def endLayout(scrollable: Boolean = false): Unit = {
     val v = currentTable match {
       case Some(tl) => tl
       case None => throw new Exception ("Oops!  Need to call startLayout() first!")
     }
+    
+    val toplevel_view = scrollable match {
+      case true =>
+	val scroll = new ScrollView(this)
+        scroll.addView(v)
+        scroll
+      case false => v }
+
     currentTable = None
-    setContentView(v)
+    setContentView(toplevel_view)
   }
+
+  def startScrollableLayout() {startLayout()}
+  def endScrollableLayout() {endLayout(scrollable=false)}
 
   def startRow(): Unit = {
     currentRow = Some(List[View]())
