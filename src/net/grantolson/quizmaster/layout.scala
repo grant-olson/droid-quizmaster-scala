@@ -48,7 +48,7 @@ trait layout extends Activity {
   }
 
   def startScrollableLayout() {startLayout()}
-  def endScrollableLayout() {endLayout(scrollable=false)}
+  def endScrollableLayout() {endLayout(scrollable=true)}
 
   def startRow(): Unit = {
     currentRow = Some(List[View]())
