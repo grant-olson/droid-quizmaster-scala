@@ -131,6 +131,10 @@ class quizAbout extends quizBase {
     endRow()
 
     startRow()
+    addText("More info at http://github.com/grant-olson/droid-quizmaster-scala")
+    endRow()
+
+    startRow()
     addText("""
 Copyright (c) 2010, Grant T. Olson
 All rights reserved.
