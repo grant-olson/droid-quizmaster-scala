@@ -24,7 +24,8 @@ class quizScore extends quizBase {
 
     addButtonRow("Play again", { view: View =>
         val myIntent:Intent = new Intent(this, classOf[quizStartMenu])
-        this.startActivity(myIntent) } )
+        this.startActivity(myIntent)
+	finish() } )
 
     endLayout()
   }
@@ -40,6 +41,7 @@ class quizQuestion extends quizBase with countdown with sounds {
       case None =>
 	val myIntent:Intent = new Intent(this, classOf[quizScore])
         this.startActivity(myIntent)
+        finish()
       case Some(question) => nextAction(question)
     }
   }
