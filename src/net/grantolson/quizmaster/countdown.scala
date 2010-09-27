@@ -9,6 +9,11 @@ trait countdown extends Activity {
   var timer:Timer = null
   var countdown = 0
 
+  override def onDestroy() {
+    if (timer != null) timer.cancel()
+    super.onDestroy()
+  }
+
   def createTimer(c:Int, tickAction: Int => Unit, stopAction: Unit => Unit) {
     timer = new Timer("quiztimer")
     countdown = c
